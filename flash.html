@@ -1,0 +1,724 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Offre Flash — Kania Soli</title>
+<style>
+  :root {
+    --eau:    #1a1aa8;
+    --eau2:   #0d2488;
+    --flash:  #f8f9f8;
+    --flash2: #1a3ce85d;
+    --feuille:#2db87a;
+    --terre:  #040404;
+    --blanc:  #ffffff;
+    --sable:  #f5f4f7;
+    --ciel:   #e8f7fb;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--terre);
+    color: var(--blanc);
+    overflow-x: hidden;
+  }
+
+  /* ══ NAV ══ */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    padding: 18px 32px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: rgba(9, 79, 243, 0.174);
+    backdrop-filter: blur(14px);
+    border-bottom: 1px solid rgb(6, 6, 6);
+  }
+  .nav-logo {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.3rem;
+    font-weight: 900;
+    color: var(--blanc);
+    letter-spacing: 0.04em;
+  }
+  .nav-logo span { color: var(--eau); }
+  .nav-links {
+    display: flex;
+    gap: 28px;
+    list-style: none;
+  }
+  .nav-links a {
+    text-decoration: none;
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: rgba(255,255,255,0.65);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    transition: color .2s;
+  }
+  .nav-links a:hover { color: var(--blanc); }
+  .nav-btn {
+    background: var(--flash);
+    color: var(--terre) !important;
+    padding: 8px 18px;
+    border-radius: 30px;
+    font-weight: 600 !important;
+    color: var(--terre);
+    transition: background .2s, transform .1s !important;
+  }
+  .nav-btn:hover { background: var(--flash2) !important; transform: scale(1.04); }
+
+  /* ══ HERO FLASH ══ */
+  .hero {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 120px 24px 80px;
+    position: relative;
+    overflow: hidden;
+    background: radial-gradient(ellipse 120% 80% at 50% 110%, rgba(26,143,168,0.4) 0%, transparent 60%),
+                var(--terre);
+  }
+
+  /* Animated rays */
+  .rays {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    pointer-events: none;
+  }
+  .rays::before {
+    content: '';
+    width: 700px; height: 700px;
+    border-radius: 50%;
+    
+  }
+  @keyframes spin-rays { to { transform: rotate(360deg); } }
+
+  /* Floating bubbles */
+  .bubble {
+    position: absolute;
+    border-radius: 50%;
+    border: 1px solid rgba(26,143,168,0.2);
+    background: rgba(26,143,168,0.05);
+    animation: float-up linear infinite;
+    pointer-events: none;
+  }
+  .bubble:nth-child(1)  { width:60px;  height:60px;  left:8%;   bottom:-30px; animation-duration:11s; }
+  .bubble:nth-child(2)  { width:100px; height:100px; left:25%;  bottom:-50px; animation-duration:17s; animation-delay:2s; }
+  .bubble:nth-child(3)  { width:40px;  height:40px;  left:55%;  bottom:-20px; animation-duration:9s;  animation-delay:5s; }
+  .bubble:nth-child(4)  { width:80px;  height:80px;  left:75%;  bottom:-40px; animation-duration:14s; animation-delay:1s; }
+  .bubble:nth-child(5)  { width:50px;  height:50px;  left:90%;  bottom:-25px; animation-duration:12s; animation-delay:7s; }
+  @keyframes float-up {
+    0%   { transform: translateY(0);      opacity: 0; }
+    10%  { opacity: 0.6; }
+    90%  { opacity: 0.3; }
+    100% { transform: translateY(-110vh); opacity: 0; }
+  }
+
+  /* FLASH badge */
+  .flash-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--flash);
+    color: var(--terre);
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    padding: 8px 20px;
+    border-radius: 30px;
+    margin-bottom: 28px;
+    position: relative;
+    animation: fadeUp .7s ease both;
+    box-shadow: 0 0 0 0 rgb(252, 252, 251);
+    animation: pulse-badge 2s ease-in-out infinite, fadeUp .7s ease both;
+  }
+  @keyframes pulse-badge {
+    0%, 100% { box-shadow: 0 0 0 0   rgb(238, 238, 237); }
+    50%       { box-shadow: 0 0 0 14px rgba(245,166,35,0); }
+  }
+  .flash-dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: var(--terre);
+    animation: blink 1s ease-in-out infinite;
+  }
+  @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.2} }
+
+  .hero-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2.6rem, 8vw, 5.5rem);
+    font-weight: 900;
+    line-height: 1.05;
+    margin-bottom: 10px;
+    animation: fadeUp .7s .1s ease both;
+  }
+  .hero-title .accent { color: var(--flash); font-style: italic; }
+  .hero-title .water  { color: var(--eau); }
+
+  .hero-sub {
+    font-size: clamp(1rem, 2.5vw, 1.25rem);
+    color: rgba(255,255,255,0.65);
+    font-weight: 300;
+    max-width: 520px;
+    line-height: 1.7;
+    margin-bottom: 48px;
+    animation: fadeUp .7s .2s ease both;
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ══ OFFRE CARD ══ */
+  .offre-wrap {
+    animation: fadeUp .7s .3s ease both;
+    width: 100%;
+    max-width: 560px;
+    position: relative;
+  }
+  .offre-card {
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 28px;
+    padding: 40px 36px;
+    backdrop-filter: blur(16px);
+    position: relative;
+    overflow: hidden;
+  }
+  .offre-card::before {
+    content: '';
+    position: absolute;
+    top: -1px; left: 20%; right: 20%;
+    height: 2px;
+    background: linear-gradient(to right, transparent, var(--flash), transparent);
+  }
+  .offre-card::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse 80% 50% at 50% -10%, rgba(245,166,35,0.1), transparent 60%);
+    pointer-events: none;
+  }
+
+  .pack-visual {
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    gap: 12px;
+    margin-bottom: 28px;
+  }
+  .pack-group {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+  }
+  .pack-icons {
+    display: flex;
+    gap: 4px;
+    flex-wrap: wrap;
+    justify-content: center;
+    max-width: 140px;
+  }
+  .pack-icon { font-size: 1.5rem; line-height: 1; }
+  .pack-label {
+    font-size: 0.72rem;
+    font-weight: 600;
+    color: rgba(255,255,255,0.5);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+  }
+  .plus-sign {
+    font-size: 2rem;
+    font-weight: 300;
+    color: rgba(255,255,255,0.3);
+    padding-bottom: 22px;
+  }
+  .free-pack {
+    position: relative;
+  }
+  .free-tag {
+    position: absolute;
+    top: -12px; left: 50%; transform: translateX(-50%);
+    background: var(--flash);
+    color: var(--terre);
+    font-size: 0.65rem;
+    font-weight: 800;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 3px 10px;
+    border-radius: 20px;
+    white-space: nowrap;
+    box-shadow: 0 4px 12px rgba(247, 247, 247, 0.995);
+  }
+  .free-icon { font-size: 2.2rem; opacity: 0.9; }
+
+  .offre-rule {
+    text-align: center;
+    margin-bottom: 24px;
+  }
+  .offre-rule .big {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.6rem;
+    font-weight: 900;
+    color: var(--blanc);
+    line-height: 1.2;
+  }
+  .offre-rule .big span { color: var(--flash); }
+  .offre-rule .small {
+    font-size: 0.88rem;
+    color: rgba(255,255,255,0.55);
+    margin-top: 6px;
+    line-height: 1.6;
+  }
+
+  .offre-cta {
+    display: block;
+    width: 100%;
+    padding: 18px;
+    background: linear-gradient(135deg, var(--flash), var(--flash2));
+    color: var(--terre);
+    border: none;
+    border-radius: 16px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 1rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    cursor: pointer;
+    text-decoration: none;
+    text-align: center;
+    transition: transform .15s, box-shadow .15s;
+    box-shadow: 0 8px 28px rgb(233, 232, 231);
+    position: relative;
+    z-index: 1;
+  }
+  .offre-cta:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 12px 36px rgba(246, 244, 244, 0.996);
+  }
+  .offre-cta:active { transform: scale(0.98); }
+
+  /* Countdown */
+  .countdown-wrap {
+    margin-top: 20px;
+    text-align: center;
+  }
+  .countdown-label {
+    font-size: 0.72rem;
+    color: rgba(255,255,255,0.4);
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    margin-bottom: 10px;
+  }
+  .countdown {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+  }
+  .cd-block {
+    background: rgba(255,255,255,0.07);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 10px;
+    padding: 10px 14px;
+    min-width: 56px;
+    text-align: center;
+  }
+  .cd-num {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--flash);
+    line-height: 1;
+  }
+  .cd-unit {
+    font-size: 0.65rem;
+    color: rgba(255,255,255,0.4);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-top: 3px;
+  }
+
+  /* ══ AVANTAGES ══ */
+  .avantages {
+    background: var(--sable);
+    color: var(--terre);
+    padding: 90px 24px;
+  }
+  .av-inner {
+    max-width: 900px;
+    margin: 0 auto;
+  }
+  .section-tag {
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--eau);
+    margin-bottom: 10px;
+  }
+  .section-h {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(1.8rem, 4vw, 2.8rem);
+    font-weight: 700;
+    color: var(--terre);
+    margin-bottom: 44px;
+    line-height: 1.2;
+  }
+  .section-h em { font-style: italic; color: var(--eau); }
+
+  .av-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 22px;
+  }
+  .av-card {
+    background: var(--blanc);
+    border-radius: 20px;
+    padding: 30px 24px;
+    border: 1px solid rgba(26,143,168,0.1);
+    box-shadow: 0 4px 20px rgba(13,61,80,0.05);
+    transition: transform .25s, box-shadow .25s;
+  }
+  .av-card:hover { transform: translateY(-5px); box-shadow: 0 10px 32px rgba(13,61,80,0.1); }
+  .av-icon {
+    width: 50px; height: 50px;
+    background: var(--ciel);
+    border-radius: 14px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.5rem;
+    margin-bottom: 16px;
+  }
+  .av-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: var(--terre);
+    margin-bottom: 8px;
+  }
+  .av-text {
+    font-size: 0.86rem;
+    color: #5a7a88;
+    line-height: 1.7;
+  }
+
+  /* ══ COMMENT EN BÉNÉFICIER ══ */
+  .comment {
+    background: linear-gradient(135deg, var(--eau2) 0%, var(--terre) 100%);
+    padding: 90px 24px;
+    position: relative;
+    overflow: hidden;
+  }
+  .comment::before {
+    content: '';
+    position: absolute;
+    top: -80px; right: -80px;
+    width: 350px; height: 350px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(245,166,35,0.1), transparent 70%);
+  }
+  .comment-inner {
+    max-width: 800px;
+    margin: 0 auto;
+    text-align: center;
+    position: relative;
+  }
+  .steps {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 24px;
+    margin-top: 44px;
+  }
+  .step {
+    position: relative;
+  }
+  .step-num {
+    font-family: 'Playfair Display', serif;
+    font-size: 3rem;
+    font-weight: 900;
+    color: rgba(255,255,255,0.08);
+    line-height: 1;
+    margin-bottom: -10px;
+  }
+  .step-box {
+    background: rgba(255,255,255,0.07);
+    border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 18px;
+    padding: 24px 18px;
+    backdrop-filter: blur(8px);
+    transition: background .2s;
+  }
+  .step-box:hover { background: rgba(255,255,255,0.11); }
+  .step-emoji { font-size: 2rem; margin-bottom: 10px; }
+  .step-text {
+    font-size: 0.86rem;
+    color: rgba(255,255,255,0.8);
+    line-height: 1.6;
+    font-weight: 500;
+  }
+
+  /* ══ BANNIÈRE FINALE ══ */
+  .banniere {
+    background: var(--sable);
+    padding: 80px 24px;
+    text-align: center;
+  }
+  .banniere-inner {
+    max-width: 640px;
+    margin: 0 auto;
+  }
+  .banniere h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(1.8rem, 4vw, 2.6rem);
+    font-weight: 900;
+    color: var(--terre);
+    margin-bottom: 14px;
+    line-height: 1.25;
+  }
+  .banniere h2 span { color: var(--eau); font-style: italic; }
+  .banniere p {
+    font-size: 0.95rem;
+    color: #5a7a88;
+    line-height: 1.75;
+    margin-bottom: 32px;
+  }
+  .banniere-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    background: var(--terre);
+    color: var(--blanc);
+    text-decoration: none;
+    padding: 16px 36px;
+    border-radius: 50px;
+    font-weight: 600;
+    font-size: 0.95rem;
+    letter-spacing: 0.04em;
+    transition: background .2s, transform .15s;
+    box-shadow: 0 8px 24px rgba(13,61,80,0.18);
+  }
+  .banniere-btn:hover { background: var(--eau2); transform: translateY(-2px); }
+
+  /* ══ FOOTER ══ */
+  footer {
+    background: var(--terre);
+    padding: 28px 24px;
+    text-align: center;
+    border-top: 1px solid rgba(255,255,255,0.06);
+  }
+  .footer-logo {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.3rem;
+    font-weight: 900;
+    color: var(--blanc);
+  }
+  .footer-logo span { color: var(--eau); }
+  .footer-tagline {
+    font-size: 0.75rem;
+    color: rgba(255,255,255,0.35);
+    margin-top: 6px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+
+  @media (max-width: 560px) {
+    nav { padding: 14px 18px; }
+    .nav-links { display: none; }
+    .offre-card { padding: 28px 20px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">Kania <span>Soli</span></div>
+  <ul class="nav-links">
+    <li><a href="commande.html" class="nav-btn">Commander</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="rays"></div>
+  <div class="bubble"></div>
+  <div class="bubble"></div>
+  <div class="bubble"></div>
+  <div class="bubble"></div>
+  <div class="bubble"></div>
+
+  <div class="flash-badge">
+    <div class="flash-dot"></div>
+    Offre Flash Limitée
+  </div>
+
+  <h1 class="hero-title">
+    1 Pack <span class="accent">Offert</span><br>
+    dès 10 <span class="water">Kania Soli</span>
+  </h1>
+  <p class="hero-sub">
+    Une occasion idéale pour économiser et ne jamais manquer d'eau Kania Soli.
+  </p>
+
+  <div class="offre-wrap">
+    <div class="offre-card">
+
+      <!-- Visuel packs -->
+      <div class="pack-visual">
+        <div class="pack-group">
+          <div class="pack-icons">
+            <span class="pack-icon">💧</span><span class="pack-icon">💧</span><span class="pack-icon">💧</span>
+            <span class="pack-icon">💧</span><span class="pack-icon">💧</span><span class="pack-icon">💧</span>
+            <span class="pack-icon">💧</span><span class="pack-icon">💧</span><span class="pack-icon">💧</span>
+            <span class="pack-icon">💧</span>
+          </div>
+          <div class="pack-label">10 packs achetés</div>
+        </div>
+        <div class="plus-sign">+</div>
+        <div class="pack-group free-pack">
+          <div class="free-tag"> GRATUIT</div>
+          <div style="margin-top:14px">
+            <span class="free-icon">💧</span>
+          </div>
+          <div class="pack-label">1 pack offert</div>
+        </div>
+      </div>
+
+      <!-- Règle -->
+      <div class="offre-rule">
+        <div class="big">
+          Achetez <span>10 packs</span>, recevez-en <span>11</span>
+        </div>
+        <div class="small">
+          Pour l'achat de 10 packs ou plus, bénéficiez d'1 pack supplémentaire offert !
+        </div>
+      </div>
+
+      <!-- CTA -->
+      <a href="#commander" class="offre-cta">
+        🛒 &nbsp; Profiter de l'offre maintenant
+      </a>
+
+      
+
+    </div>
+  </div>
+</section>
+
+<!-- AVANTAGES -->
+<section class="avantages">
+  <div class="av-inner">
+    <div class="section-tag">Pourquoi en profiter</div>
+    <h2 class="section-h">Les <em>avantages</em> de cette offre</h2>
+    <div class="av-grid">
+      <div class="av-card">
+        <div class="av-icon"></div>
+        <div class="av-title">Faites des économies réelles</div>
+        <div class="av-text">Un pack offert, c'est une réduction directe sur votre budget eau. Plus vous commandez, plus vous économisez.</div>
+      </div>
+      <div class="av-card">
+        <div class="av-icon"></div>
+        <div class="av-title">Toujours approvisionné</div>
+        <div class="av-text">Ne manquez plus jamais d'eau. Constituez facilement votre stock familial ou professionnel à prix avantageux.</div>
+      </div>
+      <div class="av-card">
+        <div class="av-icon"></div>
+        <div class="av-title">Livraison à domicile</div>
+        <div class="av-text">Commandez depuis chez vous, en Guinée ou à l'étranger. Nous livrons vos packs directement à votre adresse.</div>
+      </div>
+      <div class="av-card">
+        <div class="av-icon">🌿</div>
+        <div class="av-title">Geste pour l'environnement</div>
+        <div class="av-text">En achetant en plus grande quantité, vous réduisez les livraisons et participez à la réduction de l'empreinte carbone.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- COMMENT EN BÉNÉFICIER -->
+<section class="comment">
+  <div class="comment-inner">
+    <div class="section-tag" style="color:rgba(255,255,255,0.5)">Simple et rapide</div>
+    <h2 style="font-family:'Playfair Display',serif; font-size:clamp(1.8rem,4vw,2.6rem); font-weight:700; margin-bottom:8px;">
+      Comment en bénéficier ?
+    </h2>
+    <p style="color:rgba(255,255,255,0.55); font-size:0.9rem; font-weight:300;">3 étapes seulement pour profiter de l'offre</p>
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">01</div>
+        <div class="step-box">
+          <div class="step-emoji"></div>
+          <div class="step-text">Choisissez votre commune ou ville de livraison</div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">02</div>
+        <div class="step-box">
+          <div class="step-emoji"></div>
+          <div class="step-text">Saisissez <strong>10 packs minimum</strong> dans votre commande</div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">03</div>
+        <div class="step-box">
+          <div class="step-emoji"></div>
+          <div class="step-text">Votre <strong>1 pack offert</strong> est automatiquement ajouté !</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- BANNIÈRE FINALE -->
+<section class="banniere" id="commander">
+  <div class="banniere-inner">
+    <h2>Prêt à passer<br>votre <span>commande ?</span></h2>
+    <p>
+      Ne laissez pas passer cette offre exceptionnelle. Commandez dès maintenant vos 10 packs Kania Soli et recevez le 11ème gratuitement, livré directement chez vous.
+    </p>
+    <a href="commande.html" class="banniere-btn">
+      💧 &nbsp; Passer ma commande
+    </a>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo">Kania <span>Soli</span></div>
+  <div class="footer-tagline">L'eau qui engage • Guinée</div>
+</footer>
+
+<script>
+  // Countdown — expire dans 24h à partir de maintenant
+  const target = new Date();
+  target.setHours(target.getHours() + 24);
+
+  function updateCd() {
+    const now  = new Date();
+    const diff = Math.max(0, target - now);
+    const h = Math.floor(diff / 3600000);
+    const m = Math.floor((diff % 3600000) / 60000);
+    const s = Math.floor((diff % 60000)   / 1000);
+    document.getElementById('cd-h').textContent = String(h).padStart(2,'0');
+    document.getElementById('cd-m').textContent = String(m).padStart(2,'0');
+    document.getElementById('cd-s').textContent = String(s).padStart(2,'0');
+  }
+  updateCd();
+  setInterval(updateCd, 1000);
+</script>
+</body>
+</html>

@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Passer une Commande</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#1a4fc4">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Nunito', sans-serif;
+    background: linear-gradient(135deg, #c8e6f5 0%, #e8f4fd 50%, #b8daf0 100%);
+    min-height: 100vh;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    padding: 40px 16px;
+  }
+
+  .card {
+    background: #f0f4f8;
+    border-radius: 24px;
+    padding: 32px 28px;
+    width: 100%;
+    max-width: 480px;
+    box-shadow: 0 12px 40px rgba(0,0,0,0.18);
+  }
+
+  /* ── Section header ── */
+  .section-header {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 18px;
+  }
+  .section-icon {
+    width: 44px; height: 44px;
+    background: #3e07f3;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+  .section-icon svg { width: 22px; height: 22px; fill: white; }
+  .section-title {
+    font-size: 1.05rem;
+    font-weight: 800;
+    color: #4c1ee2;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+  }
+
+  /* ── Divider ── */
+  .divider { border: none; border-top: 1px solid #d0dce8; margin: 24px 0; }
+
+  /* ── Labels & inputs ── */
+  .field-label {
+    font-size: 0.88rem;
+    font-weight: 700;
+    color: #3522df;
+    margin-bottom: 8px;
+    display: block;
+  }
+
+  select, input[type="text"] {
+    width: 100%;
+    padding: 12px 16px;
+    border: 1.5px solid #c5d5e8;
+    border-radius: 10px;
+    background: white;
+    font-family: inherit;
+    font-size: 0.9rem;
+    color: #555;
+    appearance: none;
+    -webkit-appearance: none;
+    cursor: pointer;
+    transition: border-color .2s;
+    outline: none;
+  }
+  select { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23666' stroke-width='1.8' fill='none' stroke-linecap='round'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 14px center; padding-right: 36px; }
+  select:focus, input[type="text"]:focus { border-color: #2e86ab; }
+
+  .hint {
+    font-size: 0.8rem;
+    color: #7a94b0;
+    margin-top: 8px;
+    font-style: italic;
+  }
+
+  /* ── "Autre" extra field ── */
+  .autre-field {
+    margin-top: 12px;
+    display: none;
+  }
+  .autre-field.visible { display: block; }
+
+  /* ── Ville hors Guinée ── */
+  .hors-guinee-box {
+    background: white;
+    border-radius: 14px;
+    padding: 18px;
+    margin-top: 18px;
+    border: 1.5px dashed #b0c8dc;
+  }
+  .hors-guinee-box .field-label { margin-bottom: 10px; }
+  .hors-guinee-box .row { display: flex; gap: 10px; }
+  .hors-guinee-box .row > * { flex: 1; }
+
+  /* ── Products section ── */
+  .products-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+    margin-top: 10px;
+  }
+  .product-card {
+    background: white;
+    border-radius: 14px;
+    padding: 18px 12px;
+    text-align: center;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+  }
+  .product-icon {
+    width: 52px; height: 52px;
+    background: #2e86ab;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    margin: 0 auto 10px;
+  }
+  .product-icon svg { width: 26px; height: 26px; fill: white; }
+  .product-name {
+    font-size: 0.82rem;
+    font-weight: 800;
+    color: #1a3c5e;
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
+  }
+  .product-unit {
+    font-size: 0.72rem;
+    color: #7a94b0;
+    margin-bottom: 12px;
+  }
+  .qty-control {
+    display: flex; align-items: center; justify-content: center; gap: 8px;
+  }
+  .qty-btn {
+    width: 32px; height: 32px;
+    background: #2e86ab;
+    border: none; border-radius: 8px;
+    color: white; font-size: 1.3rem; line-height: 1;
+    cursor: pointer;
+    font-family: inherit;
+    font-weight: 700;
+    transition: background .15s, transform .1s;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .qty-btn:hover { background: #1a6a8a; }
+  .qty-btn:active { transform: scale(0.93); }
+  .qty-value {
+    min-width: 28px;
+    font-weight: 800;
+    font-size: 1rem;
+    color: #1a3c5e;
+    text-align: center;
+  }
+
+  /* ── Résumé des prix ── */
+  .prix-box {
+    background: white;
+    border-radius: 14px;
+    padding: 18px;
+    margin-top: 4px;
+    border: 1.5px solid #d0dce8;
+  }
+  .prix-box .prix-title {
+    font-weight: 800;
+    font-size: 0.9rem;
+    color: #1a3c5e;
+    margin-bottom: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+  }
+  .prix-row {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.85rem;
+    color: #4a6a88;
+    padding: 4px 0;
+    border-bottom: 1px solid #f0f4f8;
+  }
+  .prix-row:last-of-type { border-bottom: none; }
+  .prix-row span:last-child { font-weight: 800; color: #1a3c5e; }
+  .prix-total {
+    display: flex;
+    justify-content: space-between;
+    font-size: 1rem;
+    font-weight: 800;
+    color: #1a3c5e;
+    margin-top: 10px;
+    padding-top: 10px;
+    border-top: 2px solid #c5d5e8;
+  }
+
+  /* ── Paiement ── */
+  .paiement-box {
+    background: white;
+    border-radius: 14px;
+    padding: 18px;
+    border: 1.5px solid #d0dce8;
+  }
+  .paiement-title {
+    font-weight: 800;
+    font-size: 0.9rem;
+    color: #1a3c5e;
+    margin-bottom: 14px;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+  }
+  .paiement-option {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 10px 12px;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: background .15s;
+    margin-bottom: 6px;
+  }
+  .paiement-option:hover { background: #f0f6fb; }
+  .paiement-option input[type="radio"] {
+    width: 18px; height: 18px;
+    accent-color: #2e86ab;
+    margin-top: 2px;
+    flex-shrink: 0;
+    cursor: pointer;
+  }
+  .paiement-option .opt-label {
+    font-weight: 700;
+    font-size: 0.88rem;
+    color: #1a3c5e;
+  }
+  .paiement-option .opt-desc {
+    font-size: 0.78rem;
+    color: #7a94b0;
+    margin-top: 2px;
+  }
+
+  /* ── CTA Button ── */
+  .btn-commande {
+    width: 100%;
+    padding: 16px;
+    background: #2e86ab;
+    color: white;
+    border: none;
+    border-radius: 14px;
+    font-family: inherit;
+    font-size: 1rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    transition: background .2s, transform .1s, box-shadow .2s;
+    box-shadow: 0 4px 16px rgba(46,134,171,0.35);
+  }
+  .btn-commande:hover { background: #1a6a8a; box-shadow: 0 6px 20px rgba(46,134,171,0.45); }
+  .btn-commande:active { transform: scale(0.98); }
+  .btn-commande svg { width: 20px; height: 20px; fill: white; }
+
+  .section-block { margin-bottom: 20px; }
+</style>
+</head>
+<body>
+<div class="card">
+
+  <!-- ══ A. COMMUNE ══ -->
+  <div class="section-header">
+    <div class="section-icon">
+      <svg viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
+    </div>
+    <div class="section-title">A. Choisissez votre Commune</div>
+  </div>
+
+  <div class="section-block">
+    <label class="field-label" for="commune">Choisissez votre commune</label>
+    <select id="commune" onchange="handleCommune(this.value)">
+      <option value="">Sélectionnez votre commune</option>
+      <option value="Kaloum">Kaloum</option>
+      <option value="Dixinn">Dixinn</option>
+      <option value="Matam">Matam</option>
+      <option value="Ratoma">Ratoma</option>
+      <option value="Matoto">Matoto</option>
+      <option value="Manéah">Manéah</option>
+      <option value="coyah">Kagbelen</option>
+      <option value="kassa">Kassa</option>
+      <option value="Tombolia">Tombolia</option>
+      <option value="Lambanyi">Lambanyi</option>
+      <option value="Sonfonia">Sonfonia</option>
+      <option value="Gbessia">Gbessia</option>
+      <option value="Autre">Autre</option>
+    </select>
+    <p class="hint">Si vous choisissez "Autre", précisez</p>
+
+    <!-- Champ "Autre" commune en Guinée -->
+    <div class="autre-field" id="autreField">
+      <input type="text" id="autreCommune" placeholder="Précisez votre commune / quartier" />
+    </div>
+  </div>
+  
+    <input type="text" id="autreCommune" placeholder="Précisez le lieu" />
+
+  <hr class="divider">
+
+  <!-- ══ B. PRODUITS ══ -->
+  <div class="section-header">
+    <div class="section-icon">
+      <svg viewBox="0 0 24 24"><path d="M7 18c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm10 0c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zM5.17 5H2V3H0v2h2l3.6 7.59L4.25 15c-.16.28-.25.61-.25.96C4 17.1 4.9 18 6 18h14v-2H6.42c-.14 0-.25-.11-.25-.25l.03-.12.9-1.63H19c.75 0 1.41-.41 1.75-1.03l3.24-5.88A1 1 0 0023.11 5H5.17z"/></svg>
+    </div>
+    <div class="section-title">B. Choix des Produits</div>
+</div>
+
+<p style="font-size:0.85rem; color:#4a6a88; margin-bottom:16px;">Saisissez le nombre de packs / lots souhaités</p>
+
+<!-- Eau en Bouteille -->
+<div class="product-card">
+  <div class="product-card-header">
+    <div class="product-icon">
+      <svg viewBox="0 0 24 24"><path d="M18.5 2h-13A1.5 1.5 0 004 3.5v1A1.5 1.5 0 005.5 6H6v13a3 3 0 003 3h6a3 3 0 003-3V6h.5A1.5 1.5 0 0020 4.5v-1A1.5 1.5 0 0018.5 2z"/></svg>
+    </div>
+    <div class="product-info">
+      <div class="product-name">Eau en Bouteille</div>
+      <div class="product-badge">Pack de 12 bouteilles : 20 000 GNF <span>par pack</span></div>
+    </div>
+  </div>
+  <label class="field-label">Nombre de packs souhaités</label>
+  <div class="input-group">
+    <input type="number" id="nb-bouteille" min="0" value="" placeholder="0" oninput="updateResume()" />
+    <span class="input-suffix">pack(s)</span>
+  </div>
+  <div class="product-subtotal">
+    <span class="label">Sous-total bouteilles</span>
+    <span class="value" id="sub-bouteille">0 GNF</span>
+  </div>
+</div>
+
+<!-- Eau en Sachet -->
+<div class="product-card">
+  <div class="product-card-header">
+    <div class="product-icon">
+      <svg viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 14H7v-2h5v2zm5-4H7v-2h10v2zm0-4H7V7h10v2z"/></svg>
+    </div>
+    <div class="product-info">
+      <div class="product-name">Eau en Sachet</div>
+      <div class="product-badge">Lot de  sachets :  5 000 GNF <span>par lot</span></div>
+    </div>
+    <div class="product-price-tag">
+     
+      
+    </div>
+  </div>
+  <label class="field-label">Nombre de lots souhaités</label>
+  <div class="input-group">
+    <input type="number" id="nb-sachet" min="0" value="" placeholder="0" oninput="updateResume()" />
+    <span class="input-suffix">lot(s)</span>
+  </div>
+  <div class="product-subtotal">
+    <span class="label">Sous-total sachets</span>
+    <span class="value" id="sub-sachet">0 GNF</span>
+  </div>
+</div>
+
+<hr class="divider">
+  <!-- Options de paiement -->
+  <div class="paiement-box section-block">
+    <div class="paiement-title">🏦 Mode de paiement</div>
+
+    <label class="paiement-option">
+      <input type="radio" name="paiement" value="20" onchange="updatePaiement(this.value)">
+      <div>
+        <div class="opt-label">20% en ligne + 75% à la livraison</div>
+        <div class="opt-desc">Payez 20% maintenant sur la plateforme et 75% à la réception de votre commande (5% de frais de service).</div>
+      </div>
+    </label>
+
+    <label class="paiement-option">
+      <input type="radio" name="paiement" value="75" onchange="updatePaiement(this.value)">
+      <div>
+        <div class="opt-label">75% en ligne + 25% à la livraison</div>
+        <div class="opt-desc">Payez 75% maintenant sur la plateforme et le solde restant à la livraison.</div>
+      </div>
+    </label>
+
+    <label class="paiement-option">
+      <input type="radio" name="paiement" value="100" onchange="updatePaiement(this.value)">
+      <div>
+        <div class="opt-label">100% sur la plateforme</div>
+        <div class="opt-desc">Payez l'intégralité du montant en ligne. Livraison prioritaire garantie.</div>
+      </div>
+    </label>
+
+    <!-- Récapitulatif paiement -->
+    <div id="paiement-recap" style="display:none; margin-top:14px; background:#f0f6fb; border-radius:10px; padding:12px;">
+      <div class="prix-row"><span>À payer maintenant (en ligne)</span><span id="p-maintenant" style="color:#2e86ab;">—</span></div>
+      <div class="prix-row"><span>À payer à la livraison</span><span id="p-livraison">—</span></div>
+    </div>
+  </div>
+
+  <!-- ══ BOUTON ══ -->
+  <a href="payement.html" style="
+  background-color: #083183;
+  color: white;
+  width: 100%;
+  padding: 18px 24px;
+  border: none;
+  border-radius: 12px;
+  font-size: 18px;
+  font-weight: bold;
+  letter-spacing: 1px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  cursor: pointer;
+  text-decoration: none;
+  box-sizing: border-box;
+">
+  <span>🛒 VALIDER MA COMMANDE</span>
+  <span style="background: rgba(255,255,255,0.2); border-radius: 50%; padding: 4px 10px;">›</span>
+</a>
+
+</div>
+
+<script>
+  const PRIX_BOUTEILLE = 20000; // GNF par pack
+  const PRIX_SACHET    = 5000; // GNF par lot
+
+  const qty = { bouteille: 0, sachet: 0 };
+
+  function changeQty(type, delta) {
+    qty[type] = Math.max(0, qty[type] + delta);
+    document.getElementById('qty-' + type).textContent = qty[type];
+    updateResume();
+  }
+
+  function fmt(n) {
+    return n.toLocaleString('fr-GN') + ' GNF';
+  }
+
+  function updateResume() {
+    const pB = qty.bouteille * PRIX_BOUTEILLE;
+    const pS = qty.sachet    * PRIX_SACHET;
+    const total = pB + pS;
+
+    document.getElementById('s-qty-bouteille').textContent = qty.bouteille;
+    document.getElementById('s-qty-sachet').textContent    = qty.sachet;
+    document.getElementById('s-prix-bouteille').textContent = fmt(pB);
+    document.getElementById('s-prix-sachet').textContent    = fmt(pS);
+    document.getElementById('s-total').textContent          = fmt(total);
+
+    // Update paiement if already selected
+    const sel = document.querySelector('input[name="paiement"]:checked');
+    if (sel) updatePaiement(sel.value);
+  }
+
+  function updatePaiement(val) {
+    const total = qty.bouteille * PRIX_BOUTEILLE + qty.sachet * PRIX_SACHET;
+    const recap = document.getElementById('paiement-recap');
+    recap.style.display = 'block';
+
+    let now, later;
+    if (val === '20') { now = total * 0.20; later = total * 0.75; }
+    else if (val === '75') { now = total * 0.75; later = total * 0.25; }
+    else { now = total; later = 0; }
+
+    document.getElementById('p-maintenant').textContent = fmt(Math.round(now));
+    document.getElementById('p-livraison').textContent  = fmt(Math.round(later));
+  }
+
+  function handleCommune(val) {
+    document.getElementById('autreField').classList.toggle('visible', val === 'Autre');
+  }
+
+  function passerCommande() {
+    const commune = document.getElementById('commune').value;
+    const pays    = document.getElementById('pays').value.trim();
+    const paiement = document.querySelector('input[name="paiement"]:checked');
+    const total = getVal('nb-bouteille') * PRIX_B + getVal('nb-sachet') * PRIX_S;;
+
+    if (!commune && !pays) { alert('Veuillez sélectionner votre commune ou préciser votre ville.'); return; }
+    if (total === 0)        { alert('Veuillez sélectionner au moins un produit.'); return; }
+    if (!paiement)          { alert('Veuillez choisir un mode de paiement.'); return; }
+
+    alert("✅ Commande enregistrée !\nTotal : " );
+  }
+</script>
+</body>
+</html>

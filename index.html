@@ -1,0 +1,599 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Kania Soli – Eau Minérale</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Raleway:wght@300;400;600;700&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --black: #0a0a0a;
+      --dark: #111111;
+      --blue: #3ab5e5;
+      --blue-light: #6ecfee;
+      --white: #f4f4f4;
+      --gray: #888;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--black);
+      color: var(--white);
+      font-family: 'Raleway', sans-serif;
+      overflow-x: hidden;
+    }
+
+    /* ── NAVBAR ── */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 22px 60px;
+      background: rgba(10,10,10,0.85);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(58,181,229,0.1);
+    }
+
+    .logo-wrap {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .logo-label {
+      font-family: 'Raleway', sans-serif;
+      font-size: 10px;
+      font-weight: 300;
+      letter-spacing: 3px;
+      color: var(--gray);
+      text-transform: uppercase;
+      line-height: 1;
+    }
+
+    .logo-name {
+      font-family: 'Playfair Display', serif;
+      font-size: 28px;
+      font-weight: 700;
+      color: var(--white);
+      letter-spacing: -1px;
+      line-height: 1;
+    }
+
+    .logo-sub {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--blue);
+      letter-spacing: 4px;
+      text-transform: lowercase;
+    }
+
+    .drop-icon {
+      width: 28px;
+      height: 34px;
+    }
+
+    .logo-text-group { display: flex; flex-direction: column; gap: 1px; }
+
+    nav ul {
+      list-style: none;
+      display: flex;
+      gap: 40px;
+    }
+    nav ul a {
+      color: var(--gray);
+      text-decoration: none;
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 2.5px;
+      text-transform: uppercase;
+      transition: color 0.3s;
+    }
+
+    nav ul a:hover { color: var(--blue); }
+
+    .nav-cta {
+      background: var(--blue);
+      color: var(--black) !important;
+      padding: 10px 24px;
+      border-radius: 2px;
+      font-weight: 700 !important;
+      letter-spacing: 2px !important;
+      transition: background 0.3s, transform 0.2s !important;
+    }
+    .nav-cta:hover {
+      background: var(--blue-light) !important;
+      transform: translateY(-1px);
+    }
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 120px 60px 80px;
+      position: relative;
+      overflow: hidden;
+      background-image:url(centrer.jpeg) ;
+      background-size: 60%;
+      background-position : center;
+      background-repeat: no-repeat;
+    }
+    .hero-left { z-index: 1; }
+    .hero-tag {
+      display: inline-block;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 5px;
+      text-transform: uppercase;
+      color: var(--blue);
+      border: 1px solid rgba(58,181,229,0.4);
+      padding: 6px 16px;
+      margin-bottom: 32px;
+      animation: fadeUp 0.8s ease both;
+    }
+
+    .hero-title {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(52px, 6vw, 86px);
+      font-weight: 700;
+      line-height: 1.05;
+      margin-bottom: 28px;
+      animation: fadeUp 0.9s 0.1s ease both;
+    }
+    .hero-title span { color: var(--blue); }
+
+.hero-desc {
+  font-size: 15px;
+  font-weight: 300;
+  color: var(--gray);
+  line-height: 1.8;
+  max-width: 440px;
+  margin-bottom: 44px;
+  animation: fadeUp 1s 0.2s ease both;
+}
+
+.hero-btns {
+  display: flex;
+  gap: 16px;
+  animation: fadeUp 1s 0.3s ease both;
+}
+
+.btn-primary {
+  background: var(--blue);
+  color: var(--black);
+  padding: 14px 36px;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 2.5px;
+  text-transform: uppercase;
+  text-decoration: none;
+  border-radius: 2px;
+  transition: background 0.3s, transform 0.2s;
+}
+.btn-primary:hover { background: var(--blue-light); transform: translateY(-2px); }
+
+.btn-outline {
+  border: 1px solid rgba(255,255,255,0.2);
+  color: var(--white);
+  padding: 14px 36px;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 2.5px;
+  text-transform: uppercase;
+  text-decoration: none;
+  border-radius: 2px;
+  transition: border-color 0.3s, color 0.3s;
+}
+
+.btn-outline:hover { border-color: var(--blue); color: var(--blue); }
+
+/* ── BOTTLE VISUAL ── */
+.hero-right {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  z-index: 1;
+  animation: fadeUp 1s 0.2s ease both;
+}
+.bottle-stage {
+      position: relative;
+      width: 340px;
+      height: 520px;
+    }
+
+    .bottle-glow {
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse at center, rgba(58,181,229,0.18) 0%, transparent 70%);
+      border-radius: 50%;
+      animation: pulse 3s ease-in-out infinite;
+    }
+
+    .bottle-svg {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* SVG Bottle */
+    .bottle-container {
+      filter: drop-shadow(0 30px 60px rgba(58,181,229,0.25));
+    }
+
+    /* ── STATS BAR ── */
+    .stats {
+      border-top: 1px solid rgba(255,255,255,0.06);
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+      padding: 50px 60px;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 40px;
+      background: rgba(255,255,255,0.02);
+    }
+    .stat-item { text-align: center; }
+
+    .stat-num {
+      font-family: 'Playfair Display', serif;
+      font-size: 42px;
+      font-weight: 700;
+      color: var(--blue);
+      line-height: 1;
+      margin-bottom: 8px;
+    }
+
+    .stat-label {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--gray);
+    }
+
+    /* ── FEATURES ── */
+    .features {
+      padding: 100px 60px;
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 2px;
+    }
+
+    .feature-card {
+      padding: 60px 44px;
+      border: 1px solid rgba(255,255,255,0.05);
+      background: rgba(255,255,255,0.02);
+      transition: background 0.3s, border-color 0.3s;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .feature-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, var(--blue), transparent);
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+    .feature-card:hover { background: rgba(58,181,229,0.05); border-color: rgba(58,181,229,0.2); }
+    .feature-card:hover::before { opacity: 1; }
+
+    .feature-icon {
+      margin-bottom: 28px;
+      color: var(--blue);
+    }
+
+    .feature-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 22px;
+      font-weight: 700;
+      margin-bottom: 16px;
+    }
+
+    .feature-text {
+      font-size: 14px;
+      font-weight: 300;
+      color: var(--gray);
+      line-height: 1.8;
+    }
+
+    /* ── PRODUCT SECTION ── */
+    .product-section {
+      padding: 100px 60px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 80px;
+      align-items: center;
+      background: rgba(255,255,255,0.015);
+    }
+
+    .product-label {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 5px;
+      text-transform: uppercase;
+      color: var(--blue);
+      margin-bottom: 20px;
+    }
+
+    .product-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 44px;
+      font-weight: 700;
+      margin-bottom: 24px;
+      line-height: 1.1;
+    }
+
+    .product-desc {
+      font-size: 15px;
+      font-weight: 300;
+      color: var(--gray);
+      line-height: 1.9;
+      margin-bottom: 40px;
+    }
+
+    .specs {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .spec-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 14px 0;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+      font-size: 13px;
+    }
+
+    .spec-key { color: var(--gray); font-weight: 400; letter-spacing: 1px; }
+    .spec-val { font-weight: 700; color: var(--white); }
+
+    .label-visual {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .label-box {
+      background: #0d0d0d;
+      border: 1px solid rgba(58,181,229,0.2);
+      padding: 50px 60px;
+      text-align: center;
+      position: relative;
+    }
+
+    .label-box-inner {
+      background: #111;
+      padding: 40px 60px;
+      border: 2px solid #222;
+    }
+
+    .label-logo-small {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .label-text { display: flex; flex-direction: column; gap: 2px; text-align: left; }
+    .label-eau { font-size: 11px; font-weight: 300; letter-spacing: 2px; color: #aaa; }
+    .label-kania { font-family: 'Playfair Display', serif; font-size: 38px; font-weight: 700; color: #fff; }
+    .label-soli { font-size: 12px; font-weight: 700; color: var(--blue); letter-spacing: 4px; }
+    /* ── FOOTER ── */
+    footer {
+      padding: 60px;
+      border-top: 1px solid rgba(255,255,255,0.06);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .footer-logo { display: flex; align-items: center; gap: 12px; }
+    .footer-copy { font-size: 12px; color: var(--gray); letter-spacing: 1px; }
+    .footer-links { display: flex; gap: 30px; }
+    .footer-links a { font-size: 12px; color: var(--gray); text-decoration: none; letter-spacing: 2px; text-transform: uppercase; transition: color 0.3s; }
+    .footer-links a:hover { color: var(--blue); }
+
+    /* ── ANIMATIONS ── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(30px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); opacity: 1; }
+      50%       { transform: scale(1.08); opacity: 0.7; }
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0px); }
+      50%       { transform: translateY(-18px); }
+    }
+
+    .floating { animation: float 4s ease-in-out infinite; }
+
+    .btn-commander {
+        display: inline-block;
+      background: #3ab5e5;
+      color: #0a0a0a;
+      padding: 20px 60px;
+      font-size: 14px;
+      font-weight: 700;
+      letter-spacing: 4px;
+      text-transform: uppercase;
+      text-decoration: none;
+      border-radius: 3px;
+      transition: background 0.3s, transform 0.2s, box-shadow 0.3s;
+      box-shadow: 0 0 40px rgba(58,181,229,0.4);
+      animation: fadeUp 1s 0.3s ease both;
+    }
+    .btn-commander:hover {
+      background: #6ecfee;
+      transform: translateY(-3px);
+      box-shadow: 0 0 60px rgba(58,181,229,0.6);
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav>
+  <div class="logo-wrap">
+    <svg class="drop-icon" viewBox="0 0 28 36" fill="none">
+      <path d="M14 2 C14 2 2 16 2 23 A12 12 0 0 0 26 23 C26 16 14 2 14 2Z" fill="#3ab5e5"/>
+    </svg>
+    <div class="logo-text-group">
+      <span class="logo-label">eau minérale</span>
+      <span class="logo-name">kania</span>
+      <span class="logo-sub">soli</span>
+    </div>
+  </div>
+  <ul>
+    <li><a href="#produit">Produit</a></li>
+    <li><a href="#qualite">Qualité</a></li>
+    <li><a href="flash.html">Vente flash</a></li>
+    <li><a href="apropos.html"> A propos</a></li>
+    <li><a href="contact.html">Contact</a></li>
+    <li><a href="commande.html" class="nav-cta">Commander</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-overlay"></div>
+  <div class="hero-center" style="position:relative;z-index:1;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;">
+   
+  </div>
+</section>
+<!-- STATS -->
+<div class="stats">
+    <div class="stat-item">
+      <div class="stat-num">500<span style="font-size:20px;color:#fff">ml</span></div>
+      <div class="stat-label">Volume</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-num">100<span style="font-size:20px;color:#fff">%</span></div>
+      <div class="stat-label">Naturelle</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-num">0<span style="font-size:20px;color:#fff">mg</span></div>
+      <div class="stat-label">Additifs</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-num">7<span style="font-size:20px;color:#fff">.4</span></div>
+      <div class="stat-label">pH Équilibré</div>
+    </div>
+  </div>
+  
+  <!-- FEATURES -->
+  <section id="qualite" class="features">
+    <div class="feature-card">
+      <div class="feature-icon">
+        <svg width="40" height="40" viewBox="0 0 40 40" fill="none">
+          <path d="M20 4 C20 4 6 16 6 25 A14 14 0 0 0 34 25 C34 16 20 4 20 4Z" fill="none" stroke="#3ab5e5" stroke-width="1.5"/>
+          <path d="M20 10 C20 10 10 19 10 25 A10 10 0 0 0 30 25 C30 19 20 10 20 10Z" fill="rgba(58,181,229,0.15)"/>
+        </svg>
+      </div>
+      <h3 class="feature-title">Pureté Naturelle</h3>
+      <p class="feature-text">Captée à la source, l'eau Kania Soli conserve toutes ses qualités minérales sans aucun traitement chimique ni ajout artificiel.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">
+        <svg width="40" height="40" viewBox="0 0 40 40" fill="none">
+          <circle cx="20" cy="20" r="14" stroke="#3ab5e5" stroke-width="1.5"/>
+          <path d="M12 20 L18 26 L28 14" stroke="#3ab5e5" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+      <h3 class="feature-title">Qualité Certifiée</h3>
+      <p class="feature-text">Chaque bouteille est testée selon des normes strictes de qualité pour garantir une eau saine, équilibrée et conforme aux standards internationaux.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">
+        <svg width="40" height="40" viewBox="0 0 40 40" fill="none">
+          <path d="M8 32 C8 32 14 8 20 8 C26 8 32 32 32 32" stroke="#3ab5e5" stroke-width="1.5" stroke-linecap="round"/>
+          <circle cx="20" cy="20" r="4" fill="rgba(58,181,229,0.2)" stroke="#3ab5e5" stroke-width="1.5"/>
+        </svg>
+      </div>
+      <h3 class="feature-title">Minéraux Essentiels</h3>
+      <p class="feature-text">Riche en calcium, magnésium et bicarbonates, Kania Soli apporte à votre corps les minéraux dont il a besoin pour un équilibre optimal.</p>
+    </div>
+  </section>
+  <!-- PRODUCT -->
+<section id="produit" class="product-section">
+    <div>
+      <p class="product-label">Notre Produit Phare</p>
+      <h2 class="product-title">Kania Soli<br/>500 ml</h2>
+      <p class="product-desc">La bouteille Kania Soli 500ml est le format idéal pour rester hydraté tout au long de la journée. Son design épuré et son étiquette distinctive en font un choix premium pour tous les moments de votre vie.</p>
+      <div class="specs">
+        <div class="spec-row">
+          <span class="spec-key">Volume</span>
+          <span class="spec-val">500 ml</span>
+        </div>
+        <div class="spec-row">
+          <span class="spec-key">Type</span>
+          <span class="spec-val">Eau Minérale Naturelle</span>
+        </div>
+        <div class="spec-row">
+          <span class="spec-key">pH</span>
+          <span class="spec-val">7.4 – Équilibré</span>
+        </div>
+        <div class="spec-row">
+          <span class="spec-key">Conservation</span>
+          <span class="spec-val">À l'abri de la lumière</span>
+        </div>
+        <div class="spec-row">
+          <span class="spec-key">Conditionnement</span>
+          <span class="spec-val">Carton de 12 bouteilles</span>
+        </div>
+      </div>
+    </div>
+    <div class="label-visual">
+      <div class="label-box">
+        <div class="label-box-inner">
+          <div class="label-logo-small">
+            <div class="label-text">
+              <span class="label-eau">eau minérale</span>
+              <span class="label-kania">kania</span>
+              <span class="label-soli">soli</span>
+            </div>
+            <svg width="44" height="54" viewBox="0 0 28 36" fill="none">
+              <path d="M14 2 C14 2 2 16 2 23 A12 12 0 0 0 26 23 C26 16 14 2 14 2Z" fill="#3ab5e5"/>
+            </svg>
+          </div>
+        </div>
+        <p style="font-size:11px;color:#555;margin-top:20px;letter-spacing:3px;text-transform:uppercase;">Design Officiel</p>
+      </div>
+    </div>
+  </section>
+  
+  <!-- FOOTER -->
+  <footer id="contact">
+    <div class="footer-logo">
+      <svg width="20" height="26" viewBox="0 0 28 36" fill="none">
+        <path d="M14 2 C14 2 2 16 2 23 A12 12 0 0 0 26 23 C26 16 14 2 14 2Z" fill="#3ab5e5"/>
+      </svg>
+      <div>
+        <span style="font-family:'Playfair Display',serif;font-size:18px;font-weight:700;color:#fff">kania</span>
+        <span style="font-size:10px;color:#3ab5e5;letter-spacing:3px;margin-left:4px">soli</span>
+      </div>
+    </div>
+    <p class="footer-copy">© 2025 Kania Soli – Eau Minérale Naturelle. Tous droits réservés.</p>
+    <div class="footer-links">
+      <a href="#">Mentions légales</a>
+      <a href="#">Contact</a>
+      <a href="#">Instagram</a>
+    </div>
+  </footer>
+  
+  </body>
+  </html>

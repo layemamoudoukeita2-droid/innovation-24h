@@ -1,0 +1,776 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>*122# - Eau Pure CI</title>
+<link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Nunito:wght@700;800;900&display=swap" rel="stylesheet">
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#1a4fc4">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    min-height: 100vh;
+    background: #111;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Share Tech Mono', monospace;
+    padding: 20px;
+  }
+
+  /* Phone frame */
+  .phone {
+    width: 300px;
+    background: #1a1a1a;
+    border-radius: 36px;
+    padding: 16px;
+    box-shadow:
+      0 0 0 2px #333,
+      0 0 0 6px #1a1a1a,
+      0 30px 80px rgba(0,0,0,0.8);
+    position: relative;
+  }
+
+  /* Top notch */
+  .phone-top {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 12px;
+  }
+
+  .notch {
+    width: 80px; height: 20px;
+    background: #000;
+    border-radius: 0 0 14px 14px;
+  }
+
+  /* Screen */
+  .screen {
+    background: #000;
+    border-radius: 20px;
+    overflow: hidden;
+    min-height: 420px;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* Status bar */
+  .status-bar {
+    background: #000;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 6px 14px;
+    font-size: 0.65rem;
+    color: #fff;
+    font-family: 'Share Tech Mono', monospace;
+  }
+
+  .signal {
+    display: flex;
+    gap: 2px;
+    align-items: flex-end;
+  }
+
+  .signal-bar {
+    background: #fff;
+    width: 3px;
+    border-radius: 1px;
+  }
+
+  /* USSD popup */
+  .ussd-popup {
+    flex: 1;
+    background: #f0f0f0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+  }
+
+  /* USSD header */
+  .ussd-header {
+    background: #1a4fc4;
+    padding: 10px 14px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .ussd-header-icon {
+    width: 28px; height: 28px;
+    background: rgba(255,255,255,0.2);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 0.75rem;
+  }
+
+  .ussd-header-title {
+    font-family: 'Nunito', sans-serif;
+    font-weight: 900;
+    font-size: 0.8rem;
+    color: #fff;
+  }
+
+  .ussd-header-sub {
+    font-size: 0.6rem;
+    color: rgba(255,255,255,0.7);
+    font-family: 'Share Tech Mono', monospace;
+  }
+
+  /* USSD content */
+  .ussd-content {
+    flex: 1;
+    background: #fff;
+    margin: 8px;
+    border-radius: 8px;
+    padding: 14px;
+    font-size: 0.78rem;
+    color: #111;
+    line-height: 1.8;
+    min-height: 200px;
+    white-space: pre-wrap;
+    font-family: 'Share Tech Mono', monospace;
+    border: 1px solid #ddd;
+    position: relative;
+    overflow-y: auto;
+  }
+
+  .ussd-content .title-line {
+    font-family: 'Nunito', sans-serif;
+    font-weight: 900;
+    font-size: 0.85rem;
+    color: #1a4fc4;
+    text-align: center;
+    border-bottom: 1px dashed #ddd;
+    padding-bottom: 6px;
+    margin-bottom: 8px;
+  }
+
+  .ussd-content .menu-item {
+    display: block;
+    color: #111;
+    padding: 2px 0;
+  }
+
+  .ussd-content .menu-item span {
+    color: #1a4fc4;
+    font-weight: bold;
+  }
+
+  .ussd-content .info-line {
+    color: #555;
+    font-size: 0.7rem;
+  }
+
+  .ussd-content .success-line {
+    color: #16a34a;
+    font-weight: bold;
+    text-align: center;
+  }
+
+  .ussd-content .error-line {
+    color: #dc2626;
+  }
+
+  /* Input area */
+  .ussd-input-area {
+    padding: 8px;
+    background: #f0f0f0;
+    border-top: 1px solid #ddd;
+  }
+
+  .input-label {
+    font-size: 0.65rem;
+    color: #666;
+    margin-bottom: 4px;
+    font-family: 'Share Tech Mono', monospace;
+  }
+
+  .input-row {
+    display: flex;
+    gap: 6px;
+  }
+
+  .ussd-input {
+    flex: 1;
+    padding: 8px 10px;
+    border: 1.5px solid #1a4fc4;
+    border-radius: 6px;
+    font-size: 0.85rem;
+    font-family: 'Share Tech Mono', monospace;
+    background: #fff;
+    color: #111;
+    outline: none;
+  }
+
+  .send-btn {
+    padding: 8px 14px;
+    background: #1a4fc4;
+    border: none;
+    border-radius: 6px;
+    color: #fff;
+    font-family: 'Nunito', sans-serif;
+    font-weight: 800;
+    font-size: 0.75rem;
+    cursor: pointer;
+    transition: background 0.15s;
+  }
+
+  .send-btn:hover { background: #1338a0; }
+
+  /* Bottom buttons */
+  .ussd-actions {
+    display: flex;
+    justify-content: space-between;
+    padding: 6px 8px 8px;
+    background: #f0f0f0;
+  }
+
+  .action-btn {
+    padding: 6px 14px;
+    border: none;
+    border-radius: 6px;
+    font-size: 0.7rem;
+    font-family: 'Nunito', sans-serif;
+    font-weight: 800;
+    cursor: pointer;
+    transition: opacity 0.15s;
+  }
+
+  .action-btn:hover { opacity: 0.8; }
+
+  .btn-back { background: #e5e7eb; color: #333; }
+  .btn-cancel { background: #fee2e2; color: #dc2626; }
+
+  /* Phone bottom */
+  .phone-bottom {
+    display: flex;
+    justify-content: center;
+    margin-top: 12px;
+  }
+
+  .home-btn {
+    width: 40px; height: 40px;
+    border-radius: 50%;
+    background: #2a2a2a;
+    border: 2px solid #333;
+  }
+
+  /* Dial screen */
+  .dial-screen {
+    background: #000;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+  }
+
+  .dial-display {
+    font-size: 1.4rem;
+    color: #fff;
+    letter-spacing: 0.1em;
+    margin-bottom: 30px;
+    min-height: 40px;
+    text-align: center;
+    font-family: 'Share Tech Mono', monospace;
+  }
+
+  .dial-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+    width: 100%;
+    max-width: 220px;
+  }
+
+  .dial-key {
+    aspect-ratio: 1;
+    background: #2a2a2a;
+    border: none;
+    border-radius: 50%;
+    color: #fff;
+    font-size: 1rem;
+    font-family: 'Share Tech Mono', monospace;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.1s;
+    line-height: 1;
+  }
+
+  .dial-key:active { background: #444; }
+
+  .dial-key .sub {
+    font-size: 0.45rem;
+    color: #888;
+    letter-spacing: 0.05em;
+    margin-top: 2px;
+  }
+
+  .dial-key.call-btn { background: #22c55e; }
+  .dial-key.del-btn { background: #333; font-size: 1.2rem; }
+  .dial-key.hash { background: #2a2a2a; }
+
+  /* Screen switcher */
+  .screen-dial { display: flex; }
+  .screen-ussd { display: none; }
+
+  .screen.ussd-active .screen-dial { display: none; }
+  .screen.ussd-active .screen-ussd {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+  }
+
+  /* Breadcrumb */
+  .breadcrumb {
+    font-size: 0.6rem;
+    color: rgba(255,255,255,0.6);
+    text-align: center;
+    padding: 2px 8px;
+    background: #1a4fc4;
+  }
+
+  /* Typing animation */
+  .typing::after {
+    content: '|';
+    animation: blink 0.8s ease infinite;
+  }
+
+  @keyframes blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0; }
+  }
+</style>
+</head>
+<body>
+
+<div class="phone">
+  <div class="phone-top"><div class="notch"></div></div>
+
+  <div class="screen" id="mainScreen">
+
+    <!-- STATUS BAR -->
+    <div class="status-bar">
+      <span>Orange CI</span>
+      <div class="signal">
+        <div class="signal-bar" style="height:4px"></div>
+        <div class="signal-bar" style="height:6px"></div>
+        <div class="signal-bar" style="height:9px"></div>
+        <div class="signal-bar" style="height:12px"></div>
+      </div>
+      <span id="clock">09:14</span>
+    </div>
+
+    <!-- DIAL SCREEN -->
+    <div class="screen-dial dial-screen">
+      <div class="dial-display" id="dialDisplay">
+        <span class="typing"></span>
+      </div>
+      <div class="dial-grid">
+        <button class="dial-key" onclick="dialPress('1')">1<span class="sub"></span></button>
+        <button class="dial-key" onclick="dialPress('2')">2<span class="sub">ABC</span></button>
+        <button class="dial-key" onclick="dialPress('3')">3<span class="sub">DEF</span></button>
+        <button class="dial-key" onclick="dialPress('4')">4<span class="sub">GHI</span></button>
+        <button class="dial-key" onclick="dialPress('5')">5<span class="sub">JKL</span></button>
+        <button class="dial-key" onclick="dialPress('6')">6<span class="sub">MNO</span></button>
+        <button class="dial-key" onclick="dialPress('7')">7<span class="sub">PQRS</span></button>
+        <button class="dial-key" onclick="dialPress('8')">8<span class="sub">TUV</span></button>
+        <button class="dial-key" onclick="dialPress('9')">9<span class="sub">WXYZ</span></button>
+        <button class="dial-key hash" onclick="dialPress('')"></button>
+        <button class="dial-key" onclick="dialPress('0')">0<span class="sub">+</span></button>
+        <button class="dial-key hash" onclick="dialPress('#')">#</button>
+      </div>
+      <br>
+      <div class="dial-grid" style="max-width:220px">
+        <button class="dial-key del-btn" onclick="dialDelete()">⌫</button>
+        <button class="dial-key call-btn" onclick="dialCall()">📞</button>
+        <button class="dial-key del-btn" onclick="dialClear()">✕</button>
+      </div>
+    </div>
+
+    <!-- USSD SCREEN -->
+    <div class="screen-ussd">
+      <div class="ussd-popup">
+        <div class="ussd-header">
+          <div class="ussd-header-icon">💧</div>
+          <div>
+            <div class="ussd-header-title">EAU PURE CI</div>
+            <div class="ussd-header-sub" id="breadcrumb">*122#</div>
+          </div>
+        </div>
+
+        <div class="ussd-content" id="ussdContent">
+          <div class="title-line">EAU PURE CI</div>
+        </div>
+
+        <div class="ussd-input-area">
+          <div class="input-label">Répondez :</div>
+          <div class="input-row">
+            <input type="tel" class="ussd-input" id="ussdInput" placeholder="Entrez votre choix..." maxlength="20">
+            <a href="" class="send-btn" onclick="ussdSend()">ENVOYER</button>
+          </div>
+        </div>
+
+        <div class="ussd-actions">
+          <button class="action-btn btn-back" onclick="ussdBack()">◀ Retour</button>
+          <button class="action-btn btn-cancel" onclick="ussdCancel()">✕ Annuler</button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="phone-bottom"><div class="home-btn"></div></div>
+</div>
+
+<script>
+// ── Clock ──
+function updateClock() {
+  var now = new Date();
+  var h = now.getHours().toString().padStart(2,'0');
+  var m = now.getMinutes().toString().padStart(2,'0');
+  document.getElementById('clock').textContent = h + ':' + m;
+}
+updateClock();
+setInterval(updateClock, 30000);
+
+// ── Dial ──
+var dialValue = '';
+
+function dialPress(key) {
+  dialValue += key;
+  document.getElementById('dialDisplay').innerHTML = dialValue + '<span class="typing"></span>';
+}
+
+function dialDelete() {
+  dialValue = dialValue.slice(0, -1);
+  document.getElementById('dialDisplay').innerHTML = dialValue + '<span class="typing"></span>';
+}
+
+function dialClear() {
+  dialValue = '';
+  document.getElementById('dialDisplay').innerHTML = '<span class="typing"></span>';
+}
+
+function dialCall() {
+  if (dialValue === '*122#' || dialValue === '*122') {
+    lancerUSSD();
+  } else if (dialValue === '') {
+    alert('Composez *122# pour accéder au service eau');
+  } else {
+    alert('Code non reconnu. Composez *122# pour commander de l\'eau.');
+    dialClear();
+  }
+}
+
+// ── USSD Engine ──
+var ussdStep = 0;
+var ussdData = {};
+var history = [];
+
+var communes = ['Abidjan', 'Bouaké', 'Yamoussoukro', 'Daloa', 'Korhogo', 'San-Pédro', 'Divo', 'Gagnoa'];
+var zones = {
+  'Abidjan': ['Cocody', 'Plateau', 'Yopougon', 'Abobo', 'Adjamé', 'Marcory'],
+  'Bouaké': ['Centre', 'Koko', 'Air France', 'Sokoura'],
+  'Yamoussoukro': ['Centre-ville', 'Dioulakro', 'Habitat'],
+  'Daloa': ['Centre', 'Lobia', 'Gbokora'],
+  'Korhogo': ['Centre', 'Kassoumbarga'],
+  'San-Pédro': ['Centre', 'Cité'],
+  'Divo': ['Centre', 'Hiré'],
+  'Gagnoa': ['Centre', 'Gnagbodougnoa']
+};
+
+function lancerUSSD() {
+  ussdStep = 0;
+  ussdData = {};
+  history = [];
+  dialValue = '';
+  document.getElementById('mainScreen').classList.add('ussd-active');
+  document.getElementById('ussdInput').value = '';
+  afficherMenu();
+}
+
+function afficherMenu() {
+  var content = document.getElementById('ussdContent');
+  var breadcrumb = document.getElementById('breadcrumb');
+
+  if (ussdStep === 0) {
+    breadcrumb.textContent = '*122# → Menu principal';
+    content.innerHTML =
+      '<div class="title-line">💧 EAU PURE CI</div>' +
+      '<span class="menu-item"><span>1.</span> Commander de l\'eau</span>' +
+      '<span class="menu-item"><span>2.</span> Suivre ma commande</span>' +
+      '<span class="menu-item"><span>3.</span> Zones de livraison</span>' +
+      '<span class="menu-item"><span>4.</span> Tarifs</span>' +
+      '<span class="menu-item"><span>0.</span> Quitter</span>';
+
+  } else if (ussdStep === 1) {
+    breadcrumb.textContent = '*122# → Commander';
+    var liste = '<div class="title-line">📍 CHOISISSEZ VOTRE COMMUNE</div>';
+    for (var i = 0; i < communes.length; i++) {
+      liste += '<span class="menu-item"><span>' + (i+1) + '.</span> ' + communes[i] + '</span>';
+    }
+    liste += '<span class="menu-item"><span>0.</span> Retour</span>';
+    content.innerHTML = liste;
+
+  } else if (ussdStep === 2) {
+    breadcrumb.textContent = '*122# → Zone de livraison';
+    var zoneList = zones[ussdData.commune] || [];
+    var z = '<div class="title-line">🏘️ ZONE - ' + ussdData.commune.toUpperCase() + '</div>';
+    for (var j = 0; j < zoneList.length; j++) {
+      z += '<span class="menu-item"><span>' + (j+1) + '.</span> ' + zoneList[j] + '</span>';
+    }
+    z += '<span class="menu-item"><span>0.</span> Retour</span>';
+    content.innerHTML = z;
+
+  } else if (ussdStep === 3) {
+    breadcrumb.textContent = '*122# → Eau en bouteille';
+    content.innerHTML =
+      '<div class="title-line">🍶 EAU EN BOUTEILLE (PACK)</div>' +
+      '<span class="info-line">Prix : 2 000 FCFA / pack</span>\n' +
+      '<span class="menu-item"><span>1.</span> 1 pack</span>' +
+      '<span class="menu-item"><span>2.</span> 2 packs</span>' +
+      '<span class="menu-item"><span>3.</span> 3 packs</span>' +
+      '<span class="menu-item"><span>4.</span> 4 packs</span>' +
+      '<span class="menu-item"><span>5.</span> 5 packs et plus</span>' +
+      '<span class="menu-item"><span>0.</span> Aucun</span>';
+
+  } else if (ussdStep === 4) {
+    breadcrumb.textContent = '*122# → Eau en sachet';
+    content.innerHTML =
+      '<div class="title-line">🛍️ EAU EN SACHET (LOT)</div>' +
+      '<span class="info-line">Prix : 500 FCFA / lot</span>\n' +
+      '<span class="menu-item"><span>1.</span> 1 lot</span>' +
+      '<span class="menu-item"><span>2.</span> 2 lots</span>' +
+      '<span class="menu-item"><span>3.</span> 3 lots</span>' +
+      '<span class="menu-item"><span>4.</span> 4 lots</span>' +
+      '<span class="menu-item"><span>5.</span> 5 lots et plus</span>' +
+      '<span class="menu-item"><span>0.</span> Aucun</span>';
+
+  } else if (ussdStep === 5) {
+    breadcrumb.textContent = '*122# → Paiement';
+    content.innerHTML =
+      '<div class="title-line">💳 MODE DE PAIEMENT</div>' +
+      '<span class="menu-item"><span>1.</span> Orange Money</span>' +
+      '<span class="menu-item"><span>2.</span> MTN Mobile Money</span>' +
+      '<span class="menu-item"><span>3.</span> Paycard</span>' +
+      '<span class="menu-item"><span>0.</span> Retour</span>';
+
+  } else if (ussdStep === 6) {
+    breadcrumb.textContent = '*122# → Confirmation';
+    var bouteilles = ussdData.bouteille === '0' ? 'Aucun' : ussdData.bouteille + ' pack(s)';
+    var sachets = ussdData.sachet === '0' ? 'Aucun' : ussdData.sachet + ' lot(s)';
+    var paiements = ['', 'Orange Money', 'MTN MoMo', 'Paycard'];
+    var total = 0;
+    if (ussdData.bouteille !== '0') total += parseInt(ussdData.bouteille) * 2000;
+    if (ussdData.sachet !== '0') total += parseInt(ussdData.sachet) * 500;
+
+    content.innerHTML =
+      '<div class="title-line">📋 RÉCAPITULATIF</div>' +
+      '<span class="menu-item">📍 ' + ussdData.commune + ' - ' + ussdData.zone + '</span>' +
+      '<span class="menu-item">🍶 Bouteille: ' + bouteilles + '</span>' +
+      '<span class="menu-item">🛍️ Sachet: ' + sachets + '</span>' +
+      '<span class="menu-item">💳 ' + paiements[ussdData.paiement] + '</span>' +
+      '<span class="menu-item">💰 Total: ' + total.toLocaleString() + ' FCFA</span>\n' +
+      '<span class="menu-item"><span>1.</span> ✅ Confirmer</span>' +
+      '<span class="menu-item"><span>2.</span> ✕ Annuler</span>';
+
+  } else if (ussdStep === 7) {
+    // Zones info
+    breadcrumb.textContent = '*122# → Zones de livraison';
+    var zInfo = '<div class="title-line">🗺️ ZONES DE LIVRAISON</div>';
+    var communeKeys = Object.keys(zones);
+    for (var k = 0; k < communeKeys.length; k++) {
+      zInfo += '<span class="menu-item"><span>' + (k+1) + '.</span> ' + communeKeys[k] + '</span>';
+    }
+    zInfo += '<span class="menu-item"><span>0.</span> Retour</span>';
+    content.innerHTML = zInfo;
+
+  } else if (ussdStep === 8) {
+    // Tarifs
+    breadcrumb.textContent = '*122# → Tarifs';
+    content.innerHTML =
+      '<div class="title-line">💰 NOS TARIFS</div>' +
+      '<span class="menu-item">🍶 Eau bouteille</span>' +
+      '<span class="info-line">   1 pack = 2 000 FCFA</span>' +
+      '<span class="info-line">   5 packs = 9 000 FCFA</span>\n' +
+      '<span class="menu-item">🛍️ Eau en sachet</span>' +
+      '<span class="info-line">   1 lot = 500 FCFA</span>' +
+      '<span class="info-line">   5 lots = 2 200 FCFA</span>\n' +
+      '<span class="info-line">🚚 Livraison gratuite</span>' +
+      '<span class="info-line">   dès 3 000 FCFA</span>\n' +
+      '<span class="menu-item"><span>0.</span> Retour</span>';
+  }
+
+  document.getElementById('ussdInput').focus();
+}
+
+function ussdSend() {
+  var val = document.getElementById('ussdInput').value.trim();
+  if (!val) return;
+  document.getElementById('ussdInput').value = '';
+
+  history.push(ussdStep);
+
+  if (ussdStep === 0) {
+    if (val === '1') { ussdStep = 1; }
+    else if (val === '2') { afficherSuivi(); return; }
+    else if (val === '3') { ussdStep = 7; }
+    else if (val === '4') { ussdStep = 8; }
+    else if (val === '0') { ussdCancel(); return; }
+    else { afficherErreur(); return; }
+
+  } else if (ussdStep === 1) {
+    var idx = parseInt(val) - 1;
+    if (val === '0') { ussdStep = 0; }
+    else if (idx >= 0 && idx < communes.length) {
+      ussdData.commune = communes[idx];
+      ussdStep = 2;
+    } else { afficherErreur(); return; }
+
+  } else if (ussdStep === 2) {
+    var zList = zones[ussdData.commune] || [];
+    var zIdx = parseInt(val) - 1;
+    if (val === '0') { ussdStep = 1; }
+    else if (zIdx >= 0 && zIdx < zList.length) {
+      ussdData.zone = zList[zIdx];
+      ussdStep = 3;
+    } else { afficherErreur(); return; }
+
+  } else if (ussdStep === 3) {
+    var bMap = {'1':'1','2':'2','3':'3','4':'4','5':'5','0':'0'};
+    if (bMap[val] !== undefined) {
+      ussdData.bouteille = bMap[val];
+      ussdStep = 4;
+    } else { afficherErreur(); return; }
+
+  } else if (ussdStep === 4) {
+    var sMap = {'1':'1','2':'2','3':'3','4':'4','5':'5','0':'0'};
+    if (sMap[val] !== undefined) {
+      ussdData.sachet = sMap[val];
+      if (ussdData.bouteille === '0' && ussdData.sachet === '0') {
+        afficherErreur('Choisissez au moins 1 produit !'); return;
+      }
+      ussdStep = 5;
+    } else { afficherErreur(); return; }
+
+  } else if (ussdStep === 5) {
+    if (val === '1' || val === '2' || val === '3') {
+      ussdData.paiement = val;
+      ussdStep = 6;
+    } else if (val === '0') { ussdStep = 4; }
+    else { afficherErreur(); return; }
+
+  } else if (ussdStep === 6) {
+    if (val === '1') { afficherSucces(); return; }
+    else if (val === '2') { ussdCancel(); return; }
+    else { afficherErreur(); return; }
+
+  } else if (ussdStep === 7 || ussdStep === 8) {
+    if (val === '0') { ussdStep = 0; }
+    else { afficherErreur(); return; }
+  }
+
+  afficherMenu();
+}
+
+function afficherErreur(msg) {
+  var content = document.getElementById('ussdContent');
+  var existing = content.innerHTML;
+  var errLine = '<br><span class="error-line">⚠️ ' + (msg || 'Choix invalide. Réessayez.') + '</span>';
+  content.innerHTML = existing + errLine;
+  history.pop();
+}
+
+function afficherSuivi() {
+  var content = document.getElementById('ussdContent');
+  document.getElementById('breadcrumb').textContent = '*122# → Suivi';
+  content.innerHTML =
+    '<div class="title-line">🔍 SUIVI DE COMMANDE</div>' +
+    '<span class="info-line">Entrez votre code de</span>' +
+    '<span class="info-line">commande (ex: A3X8K2)</span>\n' +
+    '<span class="menu-item"><span>0.</span> Retour</span>';
+  ussdStep = 99;
+}
+
+function afficherSucces() {
+  var ref = 'CMD-';
+  var chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+  for (var i = 0; i < 6; i++) ref += chars.charAt(Math.floor(Math.random() * chars.length));
+
+  document.getElementById('breadcrumb').textContent = '*122# → Succès';
+  document.getElementById('ussdContent').innerHTML =
+    '<div class="title-line">✅ COMMANDE ENREGISTRÉE</div>' +
+    '<span class="success-line">Merci !</span>\n' +
+    '<span class="menu-item">📋 Référence :</span>' +
+    '<span class="success-line">' + ref + '</span>\n' +
+    '<span class="info-line">Un agent vous</span>' +
+    '<span class="info-line">contactera sous</span>' +
+    '<span class="info-line">30 minutes.</span>\n' +
+    '<span class="info-line">Conservez ce code</span>' +
+    '<span class="info-line">pour le suivi.</span>';
+
+  document.getElementById('ussdInput').style.display = 'none';
+  document.querySelector('.send-btn').style.display = 'none';
+  document.querySelector('.btn-back').style.display = 'none';
+  document.querySelector('.btn-cancel').textContent = '✕ Fermer';
+}
+
+function ussdBack() {
+  if (history.length > 0) {
+    ussdStep = history.pop();
+    afficherMenu();
+  } else {
+    ussdCancel();
+  }
+}
+
+function ussdCancel() {
+  document.getElementById('mainScreen').classList.remove('ussd-active');
+  document.getElementById('ussdInput').style.display = '';
+  document.querySelector('.send-btn').style.display = '';
+  document.querySelector('.btn-back').style.display = '';
+  document.querySelector('.btn-cancel').textContent = '✕ Annuler';
+  dialValue = '';
+  document.getElementById('dialDisplay').innerHTML = '<span class="typing"></span>';
+  ussdStep = 0;
+  ussdData = {};
+  history = [];
+}
+
+// Enter key support
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Enter') {
+    var screen = document.getElementById('mainScreen');
+    if (screen.classList.contains('ussd-active')) {
+      ussdSend();
+    }
+  }
+});
+
+// Auto-demo : composer *122# automatiquement
+setTimeout(function() {
+  var keys = ['*','1','2','2','#'];
+  var i = 0;
+  var interval = setInterval(function() {
+    if (i < keys.length) {
+      dialPress(keys[i]);
+      i++;
+    } else {
+      clearInterval(interval);
+      setTimeout(function() {
+        dialCall();
+      }, 400);
+    }
+  }, 200);
+}, 800);
+</script>
+</body>

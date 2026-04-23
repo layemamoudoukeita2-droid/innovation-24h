@@ -1,0 +1,633 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Paiement - Commande d'eau</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@700;800;900&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#1a4fc4">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    min-height: 100vh;
+    background: linear-gradient(135deg, #c8e6f5 0%, #e8f4fd 50%, #b8daf0 100%);
+    font-family: 'Open Sans', sans-serif;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    padding: 24px 16px 40px;
+  }
+
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background:
+      radial-gradient(ellipse 80% 60% at 10% 80%, rgba(0,100,200,0.12) 0%, transparent 60%),
+      radial-gradient(ellipse 60% 40% at 90% 10%, rgba(100,180,255,0.15) 0%, transparent 55%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .card {
+    background: #fff;
+    border-radius: 24px;
+    box-shadow: 0 20px 60px rgba(0,80,180,0.13), 0 2px 8px rgba(0,0,0,0.06);
+    padding: 32px 28px 28px;
+    width: 100%;
+    max-width: 480px;
+    position: relative;
+    z-index: 1;
+    animation: slideUp 0.5s cubic-bezier(.22,1,.36,1) both;
+  }
+
+  @keyframes slideUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  /* Section header */
+  .section-header {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 24px;
+  }
+
+  .icon-circle {
+    width: 48px; height: 48px;
+    background: #1a4fc4;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+    box-shadow: 0 4px 14px rgba(26,79,196,0.35);
+  }
+
+  .icon-circle svg { width: 24px; height: 24px; fill: #fff; }
+
+  .section-title {
+    font-family: 'Nunito', sans-serif;
+    font-weight: 900;
+    font-size: 1.15rem;
+    color: #1a3a8f;
+    letter-spacing: 0.01em;
+    line-height: 1.2;
+  }
+
+  .section-title span { color: #1a4fc4; }
+
+  /* Payment options */
+  .payment-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 12px;
+    margin-bottom: 24px;
+  }
+
+  .payment-option {
+    border: 2px solid #dde8f8;
+    border-radius: 16px;
+    padding: 16px 10px;
+    text-align: center;
+    cursor: pointer;
+    transition: border-color 0.2s, box-shadow 0.2s, background 0.2s;
+    background: #f8fbff;
+    position: relative;
+  }
+
+  .payment-option:hover {
+    border-color: #1a4fc4;
+    box-shadow: 0 4px 16px rgba(26,79,196,0.12);
+  }
+
+  .payment-option.selected {
+    border-color: #1a4fc4;
+    background: #eef3ff;
+    box-shadow: 0 4px 20px rgba(26,79,196,0.18);
+  }
+
+  .payment-logo {
+    width: 52px; height: 52px;
+    border-radius: 12px;
+    margin: 0 auto 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 900;
+    font-size: 0.7rem;
+    overflow: hidden;
+  }
+
+  .logo-orange {
+    background: #000;
+  }
+
+  .logo-orange svg { width: 38px; height: 38px; }
+
+  .logo-mtn {
+    background: #FFD700;
+    color: #000;
+    font-family: 'Nunito', sans-serif;
+    font-size: 0.85rem;
+    font-weight: 900;
+    border: 2px solid #e6c200;
+  }
+
+  .logo-paycard {
+    background: #1a4fc4;
+  }
+
+  .logo-paycard svg { width: 30px; height: 30px; fill: #fff; }
+
+  .payment-name {
+    font-family: 'Nunito', sans-serif;
+    font-weight: 800;
+    font-size: 0.75rem;
+    color: #1a3a8f;
+    line-height: 1.3;
+    margin-bottom: 10px;
+  }
+
+  /* Radio circle */
+  .radio-circle {
+    width: 20px; height: 20px;
+    border: 2px solid #c5d5f0;
+    border-radius: 50%;
+    margin: 0 auto;
+    display: flex; align-items: center; justify-content: center;
+    transition: border-color 0.2s;
+  }
+
+  .payment-option.selected .radio-circle {
+    border-color: #1a4fc4;
+    background: #1a4fc4;
+  }
+
+  .radio-dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: #fff;
+    display: none;
+  }
+
+  .payment-option.selected .radio-dot { display: block; }
+
+  /* Security badge */
+  .security-badge {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    color: #555;
+    font-size: 0.85rem;
+    margin-bottom: 20px;
+    padding: 10px;
+    background: #f0f6ff;
+    border-radius: 10px;
+  }
+
+  .security-badge svg { width: 18px; height: 18px; fill: #1a4fc4; flex-shrink: 0; }
+
+  /* Dotted divider */
+  .dotted-divider {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin: 20px 0;
+  }
+
+  .dot-line {
+    flex: 1;
+    border-top: 2px dashed #c5d5f0;
+  }
+
+  .water-drop {
+    width: 16px; height: 16px;
+    background: #1a4fc4;
+    border-radius: 50% 50% 50% 0;
+    transform: rotate(-45deg);
+    flex-shrink: 0;
+    box-shadow: 0 2px 8px rgba(26,79,196,0.3);
+  }
+
+  /* Validate button */
+  .validate-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 14px;
+    width: 100%;
+    padding: 18px 24px;
+    background: linear-gradient(90deg, #1a4fc4 0%, #1a3aaa 100%);
+    border: none;
+    border-radius: 16px;
+    color: #fff;
+    font-family: 'Nunito', sans-serif;
+    font-weight: 900;
+    font-size: 1.1rem;
+    letter-spacing: 0.05em;
+    cursor: pointer;
+    transition: transform 0.15s, box-shadow 0.2s;
+    box-shadow: 0 6px 24px rgba(26,79,196,0.38);
+    margin-bottom: 28px;
+  }
+
+  .validate-btn:hover { transform: translateY(-2px); box-shadow: 0 10px 30px rgba(26,79,196,0.45); }
+  .validate-btn:active { transform: translateY(0); }
+
+  .validate-btn svg { width: 24px; height: 24px; fill: #fff; flex-shrink: 0; }
+
+  .btn-text { flex: 1; text-align: center; }
+
+  .arrow-circle {
+    width: 34px; height: 34px;
+    background: rgba(255,255,255,0.2);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+  }
+
+  /* Footer bar */
+  .footer-bar {
+    width: 100%;
+    max-width: 480px;
+    background: #0a1e50;
+    border-radius: 20px;
+    padding: 18px 16px;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    gap: 8px;
+    position: relative;
+    z-index: 1;
+    margin-top: 4px;
+  }
+
+  .footer-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 6px;
+    padding: 4px;
+    border-right: 1px solid rgba(255,255,255,0.1);
+  }
+
+  .footer-item:last-child { border-right: none; }
+
+  .footer-icon { width: 28px; height: 28px; }
+  .footer-icon svg { width: 100%; height: 100%; }
+
+  .footer-title {
+    font-family: 'Nunito', sans-serif;
+    font-weight: 800;
+    font-size: 0.65rem;
+    color: #fff;
+    line-height: 1.2;
+  }
+
+  .footer-sub {
+    font-size: 0.6rem;
+    color: rgba(255,255,255,0.6);
+    line-height: 1.2;
+  }
+
+  /* SUCCESS OVERLAY */
+  .overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(10,30,80,0.6);
+    backdrop-filter: blur(6px);
+    z-index: 200;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+  }
+
+  .overlay.active { display: flex; }
+
+  .success-modal {
+    background: #fff;
+    border-radius: 28px;
+    padding: 40px 28px 32px;
+    max-width: 380px;
+    width: 100%;
+    text-align: center;
+    animation: popIn 0.35s cubic-bezier(.22,1,.36,1) both;
+  }
+
+  @keyframes popIn {
+    from { opacity:0; transform: scale(0.85) translateY(20px); }
+    to   { opacity:1; transform: scale(1) translateY(0); }
+  }
+
+  .success-anim {
+    width: 80px; height: 80px;
+    background: linear-gradient(135deg, #e8f8ef, #d0f0e0);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    margin: 0 auto 20px;
+    animation: pulse 1s ease infinite alternate;
+  }
+
+  @keyframes pulse {
+    from { box-shadow: 0 0 0 0 rgba(34,197,94,0.3); }
+    to   { box-shadow: 0 0 0 16px rgba(34,197,94,0); }
+  }
+
+  .success-anim svg {
+    width: 40px; height: 40px;
+    stroke: #16a34a;
+    fill: none;
+    stroke-width: 3;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    animation: drawCheck 0.5s ease 0.2s both;
+    stroke-dasharray: 60;
+    stroke-dashoffset: 60;
+  }
+
+  @keyframes drawCheck {
+    to { stroke-dashoffset: 0; }
+  }
+
+  .success-modal h2 {
+    font-family: 'Nunito', sans-serif;
+    font-weight: 900;
+    font-size: 1.5rem;
+    color: #1a3a8f;
+    margin-bottom: 10px;
+  }
+
+  .success-modal p {
+    color: #555;
+    font-size: 0.9rem;
+    line-height: 1.6;
+    margin-bottom: 8px;
+  }
+
+  .order-ref {
+    background: #f0f6ff;
+    border-radius: 12px;
+    padding: 12px 18px;
+    margin: 16px 0;
+    font-family: 'Nunito', sans-serif;
+    font-weight: 800;
+    color: #1a4fc4;
+    font-size: 1rem;
+    letter-spacing: 0.05em;
+  }
+
+  .payment-method-tag {
+    display: inline-block;
+    background: #eef3ff;
+    color: #1a4fc4;
+    font-weight: 700;
+    font-size: 0.82rem;
+    padding: 6px 14px;
+    border-radius: 20px;
+    margin-bottom: 20px;
+  }
+
+  .btn-close {
+    width: 100%;
+    padding: 15px;
+    background: linear-gradient(90deg, #1a4fc4, #1a3aaa);
+    border: none;
+    border-radius: 14px;
+    color: #fff;
+    font-family: 'Nunito', sans-serif;
+    font-weight: 900;
+    font-size: 1rem;
+    cursor: pointer;
+    box-shadow: 0 4px 16px rgba(26,79,196,0.35);
+    transition: transform 0.15s;
+  }
+
+  .btn-close:hover { transform: translateY(-1px); }
+
+  /* Phone input for payment */
+  .phone-section {
+    margin-bottom: 18px;
+    display: none;
+  }
+
+  .phone-section.show { display: block; }
+
+  .phone-label {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #444;
+    margin-bottom: 8px;
+  }
+
+  .phone-input {
+    width: 100%;
+    padding: 12px 16px;
+    border: 1.5px solid #c5d5f0;
+    border-radius: 12px;
+    font-size: 0.95rem;
+    font-family: 'Open Sans', sans-serif;
+    color: #333;
+    background: #f8fbff;
+    outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s;
+  }
+
+  .phone-input:focus {
+    border-color: #1a4fc4;
+    box-shadow: 0 0 0 3px rgba(26,79,196,0.12);
+    background: #fff;
+  }
+</style>
+</head>
+<body>
+
+<div class="card">
+  <!-- Header -->
+  <div class="section-header">
+    <div class="icon-circle">
+      <svg viewBox="0 0 24 24"><path d="M20 4H4c-1.11 0-2 .89-2 2v12c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V6c0-1.11-.89-2-2-2zm0 14H4V12h16v6zm0-10H4V6h16v2z"/></svg>
+    </div>
+    <div class="section-title"><span>D.</span> CHOISISSEZ VOTRE MODE DE PAIEMENT</div>
+  </div>
+
+  <!-- Payment options -->
+  <div class="payment-grid">
+
+    <!-- Orange Money -->
+    <div class="payment-option" id="opt-orange" onclick="selectPayment('orange')">
+      <div class="payment-logo logo-orange">
+        <svg viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg">
+          <rect width="60" height="60" rx="10" fill="#000"/>
+          <text x="8" y="38" font-size="26" font-weight="900" fill="#FF6600" font-family="Arial">OM</text>
+        </svg>
+      </div>
+      <div class="payment-name">Orange Money</div>
+      <div class="radio-circle"><div class="radio-dot"></div></div>
+    </div>
+
+    <!-- MTN -->
+    <div class="payment-option" id="opt-mtn" onclick="selectPayment('mtn')">
+      <div class="payment-logo logo-mtn">MTN</div>
+      <div class="payment-name">MTN Mobile Money</div>
+      <div class="radio-circle"><div class="radio-dot"></div></div>
+    </div>
+
+    <!-- Paycard -->
+    <div class="payment-option" id="opt-paycard" onclick="selectPayment('paycard')">
+      <div class="payment-logo logo-paycard">
+        <svg viewBox="0 0 24 24"><path d="M20 4H4c-1.11 0-2 .89-2 2v12c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V6c0-1.11-.89-2-2-2zm0 14H4V12h16v6zm0-10H4V6h16v2z"/></svg>
+      </div>
+      <div class="payment-name">Paycard</div>
+      <div class="radio-circle"><div class="radio-dot"></div></div>
+    </div>
+
+  </div>
+
+  <!-- Phone number field (shown for mobile money) -->
+  <div class="phone-section" id="phone-section">
+    <div class="phone-label" id="phone-label">Numéro Orange Money</div>
+    <input type="tel" class="phone-input" id="phone-input" placeholder="Ex: 07 00 00 00 00">
+  </div>
+
+  <!-- Security -->
+  <div class="security-badge">
+    <svg viewBox="0 0 24 24"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm0 4l5 2.18V11c0 3.5-2.33 6.79-5 7.93C9.33 17.79 7 14.5 7 11V7.18L12 5z"/></svg>
+    Paiement sécurisé et rapide
+  </div>
+
+  <!-- Dotted divider -->
+  <div class="dotted-divider">
+    <div class="dot-line"></div>
+    <div class="water-drop"></div>
+    <div class="dot-line"></div>
+  </div>
+
+  <!-- Validate button -->
+  <button class="validate-btn" onclick="validerCommande()">
+    <svg viewBox="0 0 24 24"><path d="M7 18c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm10 0c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zM7.16 14l.94-2h7.45c.75 0 1.41-.41 1.75-1.03L21 5H5.21l-.94-3H1v2h2l3.6 7.59L5.25 14c-.78 1.32.14 2 1.09 2H19v-2H7.5a.13.13 0 0 1-.13-.13l.03-.12.87-1.75z"/></svg>
+    <span class="btn-text">VALIDER MA COMMANDE</span>
+    <div class="arrow-circle">
+      <svg viewBox="0 0 24 24"><path d="M8 5l8 7-8 7" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>
+    </div>
+  </button>
+</div>
+
+<!-- Footer bar -->
+<div class="footer-bar">
+  <div class="footer-item">
+    <div class="footer-icon">
+      <svg viewBox="0 0 24 24" fill="#1a9ef5"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14H9V8h2v8zm4 0h-2V8h2v8z"/><path d="M12 2a10 10 0 1 0 0 20A10 10 0 0 0 12 2zm0 18a8 8 0 1 1 0-16 8 8 0 0 1 0 16z" fill="#1a9ef5"/></svg>
+    </div>
+    <div class="footer-title">EAU 100% PURE</div>
+    <div class="footer-sub">Qualité garantie</div>
+  </div>
+  <div class="footer-item">
+    <div class="footer-icon">
+      <svg viewBox="0 0 24 24" fill="#1a9ef5"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm-2 16l-4-4 1.41-1.41L10 14.17l6.59-6.59L18 9l-8 8z"/></svg>
+    </div>
+    <div class="footer-title">SÉCURITAIRE</div>
+    <div class="footer-sub">Hygiénique</div>
+  </div>
+  <div class="footer-item">
+    <div class="footer-icon">
+      <svg viewBox="0 0 24 24" fill="#1a9ef5"><path d="M20 8h-3V4H3c-1.1 0-2 .9-2 2v11h2c0 1.66 1.34 3 3 3s3-1.34 3-3h6c0 1.66 1.34 3 3 3s3-1.34 3-3h2v-5l-3-4zM6 18.5c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zm13.5-9l1.96 2.5H17V9.5h2.5zm-1.5 9c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5z"/></svg>
+    </div>
+    <div class="footer-title">LIVRAISON RAPIDE</div>
+    <div class="footer-sub">À votre porte</div>
+  </div>
+  <div class="footer-item">
+    <div class="footer-icon">
+      <svg viewBox="0 0 24 24" fill="#e05"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+    </div>
+    <div class="footer-title">SANTÉ & BIEN-ÊTRE</div>
+    <div class="footer-sub">Pour toute la famille</div>
+  </div>
+</div>
+
+<!-- Success overlay -->
+<div class="overlay" id="overlay">
+  <div class="success-modal">
+    <div class="success-anim">
+      <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+    </div>
+    <h2>En attente de validation !</h2>
+    <p>Merci pour votre commande. Votre paiement via</p>
+    <div class="payment-method-tag" id="method-tag">—</div>
+    <div class="order-ref" id="order-ref">Réf : #000000</div>
+    <p>Un agent vous contactera après validation .</p>
+    <br>
+    <button class="btn-close" onclick="fermerModal()">Fermer</button>
+  </div> 
+</div>
+
+<script>
+  var selectedPayment = '';
+
+  var paymentNames = {
+    'orange': 'Orange Money',
+    'mtn': 'MTN Mobile Money',
+    'paycard': 'Paycard'
+  };
+
+  function selectPayment(method) {
+    selectedPayment = method;
+
+    var options = document.querySelectorAll('.payment-option');
+    for (var i = 0; i < options.length; i++) {
+      options[i].classList.remove('selected');
+    }
+    document.getElementById('opt-' + method).classList.add('selected');
+
+    var phoneSection = document.getElementById('phone-section');
+    var phoneLabel = document.getElementById('phone-label');
+
+    if (method === 'orange' || method === 'mtn') {
+      phoneSection.classList.add('show');
+      phoneLabel.textContent = 'Numéro ' + paymentNames[method];
+    } else {
+      phoneSection.classList.remove('show');
+      document.getElementById('phone-input').value = '';
+    }
+  }
+
+  function genRef() {
+    var chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+    var ref = '';
+    for (var i = 0; i < 8; i++) {
+      ref += chars.charAt(Math.floor(Math.random() * chars.length));
+    }
+    return ref;
+  }
+
+  function validerCommande() {
+    if (!selectedPayment) {
+      alert('Veuillez choisir un mode de paiement.');
+      return;
+    }
+
+    var phoneSection = document.getElementById('phone-section');
+    if (phoneSection.classList.contains('show')) {
+      var phone = document.getElementById('phone-input').value.trim();
+      if (!phone) {
+        alert('Veuillez entrer votre numéro de téléphone.');
+        return;
+      }
+    }
+
+    document.getElementById('method-tag').textContent = paymentNames[selectedPayment];
+    document.getElementById('order-ref').textContent = 'Ref : #' + genRef();
+    document.getElementById('overlay').classList.add('active');
+  }
+
+  function fermerModal() {
+    document.getElementById('overlay').classList.remove('active');
+  }
+
+  document.getElementById('overlay').addEventListener('click', function(e) {
+    if (e.target === this) fermerModal();
+  });
+</script>
+</body>
+</html>
